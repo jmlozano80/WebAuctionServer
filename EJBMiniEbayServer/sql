@@ -1,0 +1,34 @@
+CREATE TABLE item (item_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),brand varchar(20) NOT NULL, model varchar(20)NOT NULL,bike_year varchar(4)NOT NULL,category varchar(20)NOT NULL,condition varchar(20)NOT NULL,email varchar(30)NOT NULL,
+					CONSTRAINT CK_CONDITION CHECK( condition IN ('Very Good', 'Good', 'Regular', 'Bad','Very Bad')),
+					CONSTRAINT PK_ITEM PRIMARY KEY(item_id),
+					CONSTRAINT FK_VENUE FOREIGN KEY (email) REFERENCES USER_AUCTION(email))
+
+
+
+
+CREATE TABLE USER_AUCTION
+       (
+	FIRST_NAME VARCHAR(20) NOT NULL,
+	LAST_NAME VARCHAR(20) NOT NULL,
+	EMAIL VARCHAR(30) NOT NULL,
+	PASSWORD VARCHAR(15) NOT NULL,
+	CONSTRAINT PK_STAFF PRIMARY KEY(EMAIL));
+	
+	
+	
+	CREATE TABLE bid (bid_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),auction_id INTEGER NOT NULL,email varchar(30)NOT NULL,
+bid_price DECIMAL (7,2), bid_time TIMESTAMP NOT NULL, 
+CONSTRAINT PK_BID PRIMARY KEY(bid_id),
+CONSTRAINT FK_BID_EMAIL FOREIGN KEY (email) REFERENCES USER_AUCTION(email),
+CONSTRAINT FK_BID_AUCTION_ID FOREIGN KEY (auction_id) REFERENCES AUCTION(auction_id));
+	
+	
+ALTER TABLE auction ADD COLUMN NEW_COLUMN DECIMAL (7,2);
+UPDATE auction SET NEW_COLUMN=start_price;
+ALTER TABLE auction DROP COLUMN start_price;
+RENAME COLUMN auction.NEW_COLUMN TO start_price;
+
+
+
+
+Select distinct item.category from item, auction where item.item_id=auction.item_id;
